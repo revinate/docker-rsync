@@ -89,6 +89,7 @@ func main() {
 		if *watch {
 			fmt.Println("Watching for file changes ...")
 			Watch(rpath, func(id uint64, path string, flags []string) {
+				fmt.Printf("path: %s , args: %+v\n", path, flags)
 				Sync(machineName, c, rpath, rpathDir, *verbose)
 			})
 		}

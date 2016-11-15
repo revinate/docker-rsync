@@ -14,6 +14,7 @@ func Sync(via string, c SSHCredentials, src, dst string, verbose bool) {
 		// "--verbose",
 		// "--stats",
 		"--perms",
+		"--chmod=a+rwx",
 		"--recursive",
 		"--links",
 		"--times",
@@ -25,7 +26,7 @@ func Sync(via string, c SSHCredentials, src, dst string, verbose bool) {
 		"--compress",
 	}
 
-	ripath := getRsyncIgnorePath()
+	ripath := getRsyncIgnorePath(src)
 	if ripath != "" {
 		args = append(args, `--exclude-from='`+ripath+`'`)
 	}
@@ -56,9 +57,9 @@ func Sync(via string, c SSHCredentials, src, dst string, verbose bool) {
 	}
 }
 
-func getRsyncIgnorePath() string {
-	if _, err := os.Stat(".rsyncignore"); err == nil {
-		abs, err := filepath.Abs(".rsyncignore")
+func getRsyncIgnorePath(src string) string {
+	if _, err := os.Stat(src + "docker/.rsyncignore"); err == nil {
+		abs, err := filepath.Abs(src + "docker/.rsyncignore")
 		if err == nil {
 			return abs
 		}
